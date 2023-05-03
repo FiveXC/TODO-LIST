@@ -62,21 +62,15 @@ checkDom.innerHTML = `<i class="fa-solid fa-check"></i>`
 
 checkDom.onclick = function riscar(){
 
-tarefasSalvas.forEach(function(tarefasSalvas){
-
-    if(tarefasSalvas.tarefa == objetos.tarefa){
-        if(tarefasSalvas.marcado){
-            delete tarefasSalvas.marcado
-            inputDom.classList.remove("riscar")
-        }
-        else{
-            inputDom.classList.add("riscar")
-            tarefasSalvas.marcado = "marcado"
-        }
+if(objetos.marcado){
+    delete objetos.marcado
+    inputDom.classList.remove("riscar")
+}
+else{
+    inputDom.classList.add("riscar")
+    objetos.marcado = "marcado"
+}
       
-    }
-
-})
 localStorage.setItem("chaveTarefasSalvas", JSON.stringify(tarefasSalvas))
 }
 divDom.appendChild(checkDom)
