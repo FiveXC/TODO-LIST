@@ -1,56 +1,52 @@
 //||//
-let aviso = document.querySelector(".aviso")
 let input = document.querySelector(".input")
 let botao = document.querySelector(".botao")
 let mostrarDom = document.querySelector(".mostrarDom")
 
-let tarefasSalvas = JSON.parse(localStorage.getItem("chaveTarefasSalvas")) || []
+    
+let tarefasSalvas = JSON.parse(localStorage.getItem("chaveTarefas")) || []
 
 botao.addEventListener("click", (event)=>{
-    event.preventDefault();
-if(!input.value){
-aviso.innerHTML = "Preencha os campos"
+event.preventDefault()
+
+if(input.value == ""){
+ alert("Por favor preencha o campo.")
 }
 else{
+    let objTarefa = {
+        tarefa: input.value
+    }
+    
+    let temNoLocal = false 
+    
+    tarefasSalvas.forEach(function(objTarefa){
+         if(objTarefa.tarefa == input.value){
+            alert("Tarefa já salva.")
+            temNoLocal = true
+         }
+    })
 
-let temNoLocal = false 
- 
-for(let i=0; i< tarefasSalvas.length; i++){
-    if(tarefasSalvas[i].tarefa === input.value){
-        alert("Tarefa já existe.")
+    if(!temNoLocal){
+        tarefasSalvas.push(objTarefa)
+        localStorage.setItem("chaveTarefas", JSON.stringify(tarefasSalvas))
+        varrendoTarefasSalvas()
         input.value = ""
-        temNoLocal = true
     }
 }
-if(!temNoLocal){
-    aviso.innerHTML = ``
-    let tarefas = {
-        tarefa: input.value
-    }    
-    tarefasSalvas.push(tarefas)
-    localStorage.setItem("chaveTarefasSalvas", JSON.stringify(tarefasSalvas))
-    varrendoTarefasSalvas()
-    input.value = ""
-}
- 
-}
-
-
 })
 
 
 function varrendoTarefasSalvas(){
-mostrarDom.innerHTML = ``
+    mostrarDom.innerHTML = ""
 
- tarefasSalvas.forEach(function(objetos){
-    exibindoTarefas(objetos)
-   
- })
-    
+    tarefasSalvas.forEach(function(objTarefa){
+          criandoDom(objTarefa)
+    })
+
 }
 varrendoTarefasSalvas()
 
-function exibindoTarefas(objetos){
+function criandoDom(objTarefa){
 
 let divDom = document.createElement("div")
 divDom.classList.add("divDom")
@@ -62,26 +58,27 @@ checkDom.innerHTML = `<i class="fa-solid fa-check"></i>`
 
 checkDom.onclick = function riscar(){
 
-if(objetos.marcado){
-    delete objetos.marcado
-    inputDom.classList.remove("riscar")
-}
-else{
-    inputDom.classList.add("riscar")
-    objetos.marcado = "marcado"
-}
+    if(objTarefa.marcado){
+       delete objTarefa.marcado
+       inputDom.classList.remove("riscar")
+    }
+    else{
+       inputDom.classList.add("riscar")
+       objTarefa.marcado = "marcado"
+    }
       
-localStorage.setItem("chaveTarefasSalvas", JSON.stringify(tarefasSalvas))
+    localStorage.setItem("chaveTarefas", JSON.stringify(tarefasSalvas))
 }
+
 divDom.appendChild(checkDom)
 
 
 let inputDom = document.createElement("div")
 inputDom.classList.add("inputDom")
-inputDom.innerHTML = `${objetos.tarefa}`
+inputDom.innerHTML = `${objTarefa.tarefa}`
 divDom.appendChild(inputDom)
 
-if(objetos.marcado){
+if(objTarefa.marcado){
     inputDom.classList.add("riscar")
 }
 
@@ -92,15 +89,18 @@ botaoDom.innerHTML = `<i class="fa-solid fa-trash"></i>`
 
 botaoDom.onclick = function ExcluirRegistro(){
 
-for(let i = 0; i < tarefasSalvas.length; i++){
-    if(tarefasSalvas[i].tarefa == objetos.tarefa){
-        tarefasSalvas.splice(i, 1)
+    for(let i = 0; i < tarefasSalvas.length; i++){
+        if(tarefasSalvas[i].tarefa == objTarefa.tarefa){
+            tarefasSalvas.splice(i, 1)
+        }
     }
- 
-}
-  localStorage.setItem("chaveTarefasSalvas", JSON.stringify(tarefasSalvas))
-  varrendoTarefasSalvas()
+
+    localStorage.setItem("chaveTarefas", JSON.stringify(tarefasSalvas))
+    varrendoTarefasSalvas()
+
 } 
+
 divDom.appendChild(botaoDom)
  
 }
+
